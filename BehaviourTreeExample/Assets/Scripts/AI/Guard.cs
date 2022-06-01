@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class Guard : MonoBehaviour
 {
-    private BTBaseNode tree;
+    private BTBaseNode guardBehaviour;
     private NavMeshAgent agent;
     private Animator animator;
 
@@ -18,12 +18,15 @@ public class Guard : MonoBehaviour
 
     private void Start()
     {
-        //Create your Behaviour Tree here!
+        guardBehaviour = new BTSequence(
+            new BTWait(2f),
+            new BTDebug("Hallo")
+            ) ;
     }
 
     private void FixedUpdate()
     {
-        tree?.Run();
+        guardBehaviour?.Run();
     }
 
     //private void OnDrawGizmos()
