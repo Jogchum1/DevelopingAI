@@ -9,6 +9,8 @@ public class Guard : MonoBehaviour
     private BTBaseNode guardBehaviour;
     private NavMeshAgent agent;
     private Animator animator;
+    private Blackboard blackBoard;
+    public WaypointSystem waypointSystem;
 
     private void Awake()
     {
@@ -18,10 +20,14 @@ public class Guard : MonoBehaviour
 
     private void Start()
     {
+        blackBoard = GetComponent<Blackboard>();
+        blackBoard.SetValue<Transform>("Target", waypointSystem.waypoints[0]);
+
         guardBehaviour = new BTSequence(
-            new BTWait(2f),
-            new BTDebug("Hallo")
-            ) ;
+            new BTSelectWaypoint(blackBoard, waypointSystem, "waypointSystem")
+            //new BTGoTo(blackBoard, agent, "Target")
+
+            );
     }
 
     private void FixedUpdate()

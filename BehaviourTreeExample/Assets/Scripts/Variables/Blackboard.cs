@@ -6,6 +6,8 @@ public class Blackboard : MonoBehaviour
 {
     [SerializeReference] public List<BaseScriptableObject> baseSharedVariables = new List<BaseScriptableObject>();
 
+    public Dictionary<string, object> Values = new Dictionary<string, object>();
+
     private Dictionary<string, object> dictionary = new Dictionary<string, object>();
 
     public T GetVariable<T>(string name) where T : BaseScriptableObject
@@ -15,6 +17,24 @@ public class Blackboard : MonoBehaviour
             return dictionary[name] as T;
         }
         return null;
+    }
+
+
+    public T GetValue<T>(string name)
+    {
+        return Values.ContainsKey(name) ? (T)Values[name] : default(T);
+    }
+
+    public void SetValue<T>(string name, T item)
+    {
+        if (Values.ContainsKey(name))
+        {
+            Values[name] = item;
+        }
+        else
+        {
+            Values.Add(name, item);
+        }
     }
 
     public void AddVariable(string name, BaseScriptableObject variable)

@@ -6,4 +6,7 @@ public enum BTResult { Success, Failed, Running }
 public abstract class BTBaseNode
 {
     public abstract BTResult Run();
+    public virtual void OnEnter() {
+
+    }
 }
