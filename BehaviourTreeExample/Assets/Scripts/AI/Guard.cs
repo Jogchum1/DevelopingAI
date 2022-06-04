@@ -6,7 +6,9 @@ using UnityEngine.AI;
 
 public class Guard : MonoBehaviour
 {
-    private BTBaseNode guardBehaviour;
+    private BTBaseNode patrolBehaviour;
+    private BTBaseNode attackBehaviour;
+    private BTBaseNode chooseBehaviour;
     private NavMeshAgent agent;
     private Animator animator;
     private Blackboard blackBoard;
@@ -23,16 +25,29 @@ public class Guard : MonoBehaviour
         blackBoard = GetComponent<Blackboard>();
         blackBoard.SetValue<Transform>("Target", waypointSystem.waypoints[0]);
 
-        guardBehaviour = new BTSequence(
-            new BTSelectWaypoint(blackBoard, waypointSystem, "waypointSystem")
-            //new BTGoTo(blackBoard, agent, "Target")
+        patrolBehaviour = new BTSequence(
+            new BTDebug("PATROL"),
+            new BTFailed(),
+            new BTDebug("PATROL2"),
+            new BTSelectWaypoint(blackBoard, waypointSystem, "waypointSystem"),
+            
+            new BTGoTo(blackBoard, agent, "Target")
 
             );
+        attackBehaviour = new BTSequence(
+                new BTDebug("ATTACK"),
+                new BTWait(2)
+            );
+
+        chooseBehaviour = new BTSelector(patrolBehaviour, attackBehaviour);
+
+
+
     }
 
     private void FixedUpdate()
     {
-        guardBehaviour?.Run();
+        chooseBehaviour?.Run();
     }
 
     //private void OnDrawGizmos()
