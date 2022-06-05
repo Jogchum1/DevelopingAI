@@ -439,6 +439,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypointSystem: {fileID: 539429227}
+  target: {fileID: 1267729045}
+  viewAngle: 20
 --- !u!195 &539429223
 NavMeshAgent:
   m_ObjectHideFlags: 0

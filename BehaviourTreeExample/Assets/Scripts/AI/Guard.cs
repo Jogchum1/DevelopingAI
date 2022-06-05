@@ -14,6 +14,9 @@ public class Guard : MonoBehaviour
     private Blackboard blackBoard;
     public WaypointSystem waypointSystem;
 
+    public Transform target;
+    public float viewAngle = 100;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -27,19 +30,19 @@ public class Guard : MonoBehaviour
 
         patrolBehaviour = new BTSequence(
             new BTDebug("PATROL"),
-            new BTFailed(),
+            //new BTFailed(),
             new BTDebug("PATROL2"),
             new BTSelectWaypoint(blackBoard, waypointSystem, "waypointSystem"),
             
-            new BTGoTo(blackBoard, agent, "Target")
-
+            new BTGoTo(blackBoard, agent, "Target"),
+            new BTLookForPlayer(target, transform, viewAngle)
             );
-        attackBehaviour = new BTSequence(
-                new BTDebug("ATTACK"),
-                new BTWait(2)
-            );
+        //attackBehaviour = new BTSequence(
+        //        new BTDebug("ATTACK"),
+        //        new BTWait(2)
+        //    );
 
-        chooseBehaviour = new BTSelector(patrolBehaviour, attackBehaviour);
+        //chooseBehaviour = new BTSelector(patrolBehaviour, attackBehaviour);
 
 
 
@@ -47,7 +50,7 @@ public class Guard : MonoBehaviour
 
     private void FixedUpdate()
     {
-        chooseBehaviour?.Run();
+        patrolBehaviour?.Run();
     }
 
     //private void OnDrawGizmos()
