@@ -7,9 +7,14 @@ using UnityEngine.AI;
 public class Rogue : MonoBehaviour
 {
 
-    private BTBaseNode tree;
+    private BTBaseNode FollowBehaviour;
     private NavMeshAgent agent;
     private Animator animator;
+    private Blackboard blackBoard;
+    public float stoppingDistance = 2f;
+
+    public Transform player;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -18,12 +23,17 @@ public class Rogue : MonoBehaviour
 
     private void Start()
     {
-        //TODO: Create your Behaviour tree here
+        blackBoard = new Blackboard();
+        blackBoard.SetValue<Transform>("Player", player);
+
+
+        FollowBehaviour = new BTSequence(
+            new BTGoTo(blackBoard, agent, "Player", stoppingDistance));
     }
 
     private void FixedUpdate()
     {
-        tree?.Run();
+        FollowBehaviour?.Run();
     }
 
     //private void OnDrawGizmos()

@@ -13,8 +13,10 @@ public class Guard : MonoBehaviour
     private Animator animator;
     private Blackboard blackBoard;
     public WaypointSystem waypointSystem;
+    public float stoppingDistance = 2f;
 
-    public Transform target;
+    public Transform player;
+    public Transform weapon;
     public float viewAngle = 100;
 
     private void Awake()
@@ -27,22 +29,26 @@ public class Guard : MonoBehaviour
     {
         blackBoard = GetComponent<Blackboard>();
         blackBoard.SetValue<Transform>("Target", waypointSystem.waypoints[0]);
+        blackBoard.SetValue<Transform>("Player", player);
+        blackBoard.SetValue<Transform>("Weapon", weapon);
+
+
+        attackBehaviour = new BTSequence(
+                new BTDebug("ATTACK"),
+                new BTLookForPlayer(player, transform, viewAngle),
+                new BTGoTo(blackBoard, agent, "Weapon", stoppingDistance),
+                new BTGoTo(blackBoard, agent, "Player", stoppingDistance)
+
+            );
 
         patrolBehaviour = new BTSequence(
             new BTDebug("PATROL"),
-            //new BTFailed(),
-            new BTDebug("PATROL2"),
             new BTSelectWaypoint(blackBoard, waypointSystem, "waypointSystem"),
-            
-            new BTGoTo(blackBoard, agent, "Target"),
-            new BTLookForPlayer(target, transform, viewAngle)
+            new BTGoTo(blackBoard, agent, "Target", stoppingDistance)
+            //new BTLookForPlayer(target, transform, viewAngle)
             );
-        //attackBehaviour = new BTSequence(
-        //        new BTDebug("ATTACK"),
-        //        new BTWait(2)
-        //    );
 
-        //chooseBehaviour = new BTSelector(patrolBehaviour, attackBehaviour);
+        chooseBehaviour = new BTSelector(attackBehaviour, patrolBehaviour);
 
 
 
@@ -50,7 +56,7 @@ public class Guard : MonoBehaviour
 
     private void FixedUpdate()
     {
-        patrolBehaviour?.Run();
+        chooseBehaviour?.Run();
     }
 
     //private void OnDrawGizmos()

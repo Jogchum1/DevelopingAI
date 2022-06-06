@@ -10,8 +10,7 @@ public class BTGoTo : BTBaseNode
     private Blackboard bb;
     private string targetName;
 
-
-    public BTGoTo(Blackboard _bb, NavMeshAgent _agent, string _target)
+    public BTGoTo(Blackboard _bb, NavMeshAgent _agent, string _target, float _stoppingDistance)
     {
         bb = _bb;
         agent = _agent;
@@ -28,7 +27,7 @@ public class BTGoTo : BTBaseNode
     {
         target = bb.GetValue<Transform>(targetName);
         agent.SetDestination(target.position);
-        Debug.Log(target.position);
+        //Debug.Log(target.position);
         // Debug.Log("HEY");
 
         if (agent.pathStatus == NavMeshPathStatus.PathInvalid)
@@ -37,7 +36,7 @@ public class BTGoTo : BTBaseNode
             return BTResult.Failed;
         }
 
-        if (agent.transform.position == target.position)
+        if (Vector3.Distance(agent.transform.position, target.position) <= agent.stoppingDistance)
         {
 
             return BTResult.Success;

@@ -22,12 +22,20 @@ public class BTLookForPlayer : BTBaseNode
         {
             Debug.Log("ER IS IETS IN JE VIEWANGLE OFZO");
             //raycast
-            return BTResult.Success;
+            RaycastHit hit;
+            if (Physics.Raycast(guard.position, dirToTarget, out hit, 20) && hit.transform.tag == "Player")
+            {
+                Debug.Log("PLAYER SPOTTED");
+                return BTResult.Success;
+            }
+
+            return BTResult.Running;
+
         }
         else
         {
             Debug.Log("NIETS");
-            return BTResult.Running;
+            return BTResult.Failed;
         }
     }
 }
