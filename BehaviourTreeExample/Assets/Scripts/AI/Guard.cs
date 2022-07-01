@@ -31,21 +31,24 @@ public class Guard : MonoBehaviour
         blackBoard.SetValue<Transform>("Target", waypointSystem.waypoints[0]);
         blackBoard.SetValue<Transform>("Player", player);
         blackBoard.SetValue<Transform>("Weapon", weapon);
-
+        blackBoard.SetValue<bool>("HasWeapon", false);
 
         attackBehaviour = new BTSequence(
                 new BTDebug("ATTACK"),
                 new BTLookForPlayer(player, transform, viewAngle),
-                new BTGoTo(blackBoard, agent, "Weapon", stoppingDistance),
-                new BTGoTo(blackBoard, agent, "Player", stoppingDistance)
+                new BTCheckBool(blackBoard, new BTGoTo(blackBoard, agent, "Weapon", stoppingDistance)),
+                new BTPickUp(blackBoard),
+                new BTGoTo(blackBoard, agent, "Player", stoppingDistance),
+                new BTChasePlayer(blackBoard, agent, "Player", 5f, 2f)
+                //new BTAttack()
 
             );
 
         patrolBehaviour = new BTSequence(
             new BTDebug("PATROL"),
             new BTSelectWaypoint(blackBoard, waypointSystem, "waypointSystem"),
-            new BTGoTo(blackBoard, agent, "Target", stoppingDistance)
-            //new BTLookForPlayer(target, transform, viewAngle)
+            new BTGoTo(blackBoard, agent, "Target", stoppingDistance),
+            new BTLookForPlayer(player, transform, viewAngle)
             );
 
         chooseBehaviour = new BTSelector(attackBehaviour, patrolBehaviour);
