@@ -6,6 +6,8 @@ using UnityEngine.Assertions.Must;
 public class Player : MonoBehaviour, IDamageable
 {
     public Transform Camera;
+    public int Health = 5;
+
     [SerializeField] private float rotationSpeed = 180f;
     [SerializeField] private float moveSpeed = 3;
     [SerializeField] private float deathForce = 1000;
@@ -64,6 +66,7 @@ public class Player : MonoBehaviour, IDamageable
 
     public void TakeDamage(GameObject attacker, int damage)
     {
+        Health =- damage;
         animator.enabled = false;
         var cols = GetComponentsInChildren<Collider>();
         foreach (Collider col in cols)

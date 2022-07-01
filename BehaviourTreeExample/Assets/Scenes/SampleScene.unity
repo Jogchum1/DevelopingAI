@@ -440,7 +440,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waypointSystem: {fileID: 539429227}
   stoppingDistance: 2
-  player: {fileID: 1267729045}
+  player: {fileID: 1267729044}
   weapon: {fileID: 1788211977}
   viewAngle: 50
 --- !u!195 &539429223
@@ -1050,6 +1050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Camera: {fileID: 1696898269}
+  Health: 5
   rotationSpeed: 360
   moveSpeed: 3
   deathForce: 1500

@@ -15,7 +15,7 @@ public class Guard : MonoBehaviour
     public WaypointSystem waypointSystem;
     public float stoppingDistance = 2f;
 
-    public Transform player;
+    public GameObject player;
     public Transform weapon;
     public float viewAngle = 100;
 
@@ -29,18 +29,21 @@ public class Guard : MonoBehaviour
     {
         blackBoard = GetComponent<Blackboard>();
         blackBoard.SetValue<Transform>("Target", waypointSystem.waypoints[0]);
-        blackBoard.SetValue<Transform>("Player", player);
+        blackBoard.SetValue<Transform>("Player", player.transform);
         blackBoard.SetValue<Transform>("Weapon", weapon);
         blackBoard.SetValue<bool>("HasWeapon", false);
 
         attackBehaviour = new BTSequence(
                 new BTDebug("ATTACK"),
-                new BTLookForPlayer(player, transform, viewAngle),
-                new BTCheckBool(blackBoard, new BTGoTo(blackBoard, agent, "Weapon", stoppingDistance)),
-                new BTPickUp(blackBoard),
+                new BTLookForPlayer(player.transform, transform, viewAngle),
+
+                    new BTCheckBool(blackBoard, 
+                    new BTGoTo(blackBoard, agent, "Weapon", stoppingDistance), 
+                    new BTPickUp(blackBoard)),
+
                 new BTGoTo(blackBoard, agent, "Player", stoppingDistance),
-                new BTChasePlayer(blackBoard, agent, "Player", 5f, 2f)
-                //new BTAttack()
+                new BTChasePlayer(blackBoard, agent, "Player", 5f, 2f),
+                new BTAttack(player, gameObject, 5)
 
             );
 
@@ -48,7 +51,7 @@ public class Guard : MonoBehaviour
             new BTDebug("PATROL"),
             new BTSelectWaypoint(blackBoard, waypointSystem, "waypointSystem"),
             new BTGoTo(blackBoard, agent, "Target", stoppingDistance),
-            new BTLookForPlayer(player, transform, viewAngle)
+            new BTLookForPlayer(player.transform, transform, viewAngle)
             );
 
         chooseBehaviour = new BTSelector(attackBehaviour, patrolBehaviour);
