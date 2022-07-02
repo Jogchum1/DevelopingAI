@@ -18,7 +18,7 @@ public class Rogue : MonoBehaviour
 
     public GameObject player;
     public GameObject guard;
-
+    public GameObject bomb;
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -35,7 +35,10 @@ public class Rogue : MonoBehaviour
             new BTCheckPlayer(player),
             new BTDebug("HELP DE SPELER"),
             new BTFindCover(blackBoard, agent, guard.transform, transform),
-            new BTGoToCover(blackBoard, agent, 0.2f)
+            new BTGoToCover(blackBoard, agent, 2f),
+            new BTDebug("GOOI BOM"),
+
+            new BTThrowSmokeBomb(blackBoard, bomb, guard.transform, player.transform)
           
             
            );

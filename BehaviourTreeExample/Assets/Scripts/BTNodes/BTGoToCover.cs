@@ -18,8 +18,10 @@ public class BTGoToCover : BTBaseNode
 
     public override BTResult Run()
     {
+        Debug.Log("GOING TO COVER");
         target = bb.GetValue<Vector3>("Cover");
         agent.SetDestination(target);
+        Debug.Log(target);
         //Debug.Log(target.position);
         // Debug.Log("HEY");
 

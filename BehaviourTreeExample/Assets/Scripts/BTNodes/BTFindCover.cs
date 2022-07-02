@@ -21,6 +21,8 @@ public class BTFindCover : BTBaseNode
 
     public override BTResult Run()
     {
+        Debug.Log("FINDING TO COVER");
+
         List<NavMeshHit> hitList = new List<NavMeshHit>();
         NavMeshHit navHit;
 
