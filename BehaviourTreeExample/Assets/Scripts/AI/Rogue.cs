@@ -8,12 +8,16 @@ public class Rogue : MonoBehaviour
 {
 
     private BTBaseNode FollowBehaviour;
+    private BTBaseNode SupportBehaviour;
+    private BTBaseNode ChooseBehaviour;
     private NavMeshAgent agent;
     private Animator animator;
     private Blackboard blackBoard;
     public float stoppingDistance = 2f;
+    private string cover;
 
-    public Transform player;
+    public GameObject player;
+    public GameObject guard;
 
     private void Awake()
     {
@@ -24,16 +28,32 @@ public class Rogue : MonoBehaviour
     private void Start()
     {
         blackBoard = new Blackboard();
-        blackBoard.SetValue<Transform>("Player", player);
-
+        blackBoard.SetValue<Transform>("Player", player.transform);
+        blackBoard.SetValue<Transform>("Guard", guard.transform);
+        SupportBehaviour = new BTSequence(
+            
+            new BTCheckPlayer(player),
+            new BTDebug("HELP DE SPELER"),
+            new BTFindCover(blackBoard, agent, guard.transform, transform),
+            new BTGoToCover(blackBoard, agent, 0.2f)
+          
+            
+           );
 
         FollowBehaviour = new BTSequence(
-            new BTGoTo(blackBoard, agent, "Player", stoppingDistance));
+            new BTDoAnimation(animator, "Walk Crouch"),
+            new BTGoTo(blackBoard, agent, "Player", stoppingDistance),
+            new BTDoAnimation(animator, "Crouch Idle")
+            
+            );
+        
+
+        ChooseBehaviour = new BTSelector(SupportBehaviour, FollowBehaviour);
     }
 
     private void FixedUpdate()
     {
-        FollowBehaviour?.Run();
+        ChooseBehaviour?.Run();
     }
 
     //private void OnDrawGizmos()

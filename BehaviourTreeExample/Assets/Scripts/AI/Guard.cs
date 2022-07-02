@@ -16,7 +16,7 @@ public class Guard : MonoBehaviour
     public float stoppingDistance = 2f;
 
     public GameObject player;
-    public Transform weapon;
+    public GameObject weapon;
     public float viewAngle = 100;
 
     private void Awake()
@@ -30,28 +30,36 @@ public class Guard : MonoBehaviour
         blackBoard = GetComponent<Blackboard>();
         blackBoard.SetValue<Transform>("Target", waypointSystem.waypoints[0]);
         blackBoard.SetValue<Transform>("Player", player.transform);
-        blackBoard.SetValue<Transform>("Weapon", weapon);
+        blackBoard.SetValue<Transform>("Weapon", weapon.transform);
         blackBoard.SetValue<bool>("HasWeapon", false);
 
         attackBehaviour = new BTSequence(
-                new BTDebug("ATTACK"),
+                new BTDebug("AttackBehaviour"),
                 new BTLookForPlayer(player.transform, transform, viewAngle),
 
-                    new BTCheckBool(blackBoard, 
-                    new BTGoTo(blackBoard, agent, "Weapon", stoppingDistance), 
-                    new BTPickUp(blackBoard)),
+                    new BTCheckBool(blackBoard,
+                        new BTGoTo(blackBoard, agent, "Weapon", 0.5f),
+                        new BTPickUp(blackBoard, weapon, gameObject)),
 
-                new BTGoTo(blackBoard, agent, "Player", stoppingDistance),
-                new BTChasePlayer(blackBoard, agent, "Player", 5f, 2f),
-                new BTAttack(player, gameObject, 5)
+                new BTGoTo(blackBoard, agent, "Player", 10),
+                new BTChasePlayer(blackBoard, agent, "Player", 20f, 2f),
+                new BTDoAnimation(animator, "Kick"),
+                new BTAttack(player, gameObject, 1),
+                new BTWait(1f)
+
+
 
             );
 
         patrolBehaviour = new BTSequence(
-            new BTDebug("PATROL"),
+
+            new BTDebug("PatrolBehaviour"),
             new BTSelectWaypoint(blackBoard, waypointSystem, "waypointSystem"),
-            new BTGoTo(blackBoard, agent, "Target", stoppingDistance),
-            new BTLookForPlayer(player.transform, transform, viewAngle)
+
+                new BTSelector(new BTLookForPlayer(player.transform, transform, viewAngle),
+                new BTGoTo(blackBoard, agent, "Target", stoppingDistance))
+                                
+            
             );
 
         chooseBehaviour = new BTSelector(attackBehaviour, patrolBehaviour);

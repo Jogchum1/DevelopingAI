@@ -15,7 +15,6 @@ public class BTAttack : BTBaseNode
     }
     public override BTResult Run()
     {
-        Debug.Log("ATTACKING");
         if(attackedObject.TryGetComponent(out Player player))
         {
             player.TakeDamage(attacker, damage);

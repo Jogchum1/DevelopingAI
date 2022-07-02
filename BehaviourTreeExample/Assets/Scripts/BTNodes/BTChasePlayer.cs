@@ -21,7 +21,6 @@ public class BTChasePlayer : BTBaseNode
     }
     public override BTResult Run()
     {
-        Debug.Log("STARTING CHASE");
         target = bb.GetValue<Transform>(targetName);
         agent.SetDestination(target.position);
         
@@ -34,20 +33,17 @@ public class BTChasePlayer : BTBaseNode
 
         if (Vector3.Distance(agent.transform.position, target.position) > maxDistance)
         {
-            Debug.Log("Chase player failed, hijs te ver");
 
             return BTResult.Failed;
         }
         else if (Vector3.Distance(agent.transform.position, target.position) <= stoppingDistance)
         {
-            Debug.Log("Chase player SUCCES");
-            Debug.Log("Hier komt de chase");
+            
             return BTResult.Success;
 
         }
         else
         {
-            Debug.Log("Chase player running");
 
             return BTResult.Running;
         }

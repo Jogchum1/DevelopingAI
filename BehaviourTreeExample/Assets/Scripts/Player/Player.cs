@@ -18,6 +18,7 @@ public class Player : MonoBehaviour, IDamageable
     private float hor = 0;
     private Vector3 moveDirection;
     private Collider mainCollider;
+    public bool isAttacked = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -66,25 +67,31 @@ public class Player : MonoBehaviour, IDamageable
 
     public void TakeDamage(GameObject attacker, int damage)
     {
-        Health =- damage;
-        animator.enabled = false;
-        var cols = GetComponentsInChildren<Collider>();
-        foreach (Collider col in cols)
+        isAttacked = true;
+        StartCoroutine(ResetAttacked());
+        Health = Health - damage;
+        if(Health <= 0)
         {
-            col.enabled = true;
-        }
-        mainCollider.enabled = false;
+            animator.enabled = false;
+            var cols = GetComponentsInChildren<Collider>();
+            foreach (Collider col in cols)
+            {
+                col.enabled = true;
+            }
+            mainCollider.enabled = false;
 
-        var rigidBodies = GetComponentsInChildren<Rigidbody>();
-        foreach (Rigidbody rib in rigidBodies)
-        {
-            rib.isKinematic = false;
-            rib.useGravity = true;
-            rib.AddForce(Vector3.Scale(new Vector3(1,0.5f,1),(transform.position - attacker.transform.position).normalized * deathForce));
-        }
-        ragdoll.transform.SetParent(null);
+            var rigidBodies = GetComponentsInChildren<Rigidbody>();
+            foreach (Rigidbody rib in rigidBodies)
+            {
+                rib.isKinematic = false;
+                rib.useGravity = true;
+                rib.AddForce(Vector3.Scale(new Vector3(1,0.5f,1),(transform.position - attacker.transform.position).normalized * deathForce));
+            }
+            ragdoll.transform.SetParent(null);
 
-        gameObject.SetActive(false);
+            gameObject.SetActive(false);
+
+        }
     }
 
     private void GetComponentsRecursively<T>(GameObject obj, ref List<T> components)
@@ -107,5 +114,11 @@ public class Player : MonoBehaviour, IDamageable
         {
             animator.CrossFade(animationName, fadeTime);
         }
+    }
+
+    private IEnumerator ResetAttacked()
+    {
+        yield return new WaitForSeconds(4.0f);
+        isAttacked = false;
     }
 }

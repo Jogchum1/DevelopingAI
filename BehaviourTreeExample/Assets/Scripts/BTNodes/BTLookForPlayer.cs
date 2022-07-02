@@ -17,6 +17,7 @@ public class BTLookForPlayer : BTBaseNode
 
     public override BTResult Run()
     {
+        
         Vector3 dirToTarget = (target.position - guard.position).normalized;
         if(Vector3.Angle(guard.forward, dirToTarget) < viewAngle / 2)
         {

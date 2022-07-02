@@ -21,12 +21,10 @@ public class BTCheckBool : BTBaseNode
         CheckBool = bb.GetValue<bool>("HasWeapon");
         if (CheckBool == true)
         {
-            Debug.Log("BOOL IS TRUEEE");
             return BTResult.Success;
         }
         else
         {
-            Debug.Log("BOOL IS false");
 
             for (; currentIndex < children.Length; currentIndex++)
             {

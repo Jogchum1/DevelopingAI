@@ -3,32 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class BTGoTo : BTBaseNode
+public class BTGoToCover : BTBaseNode
 {
-    public Transform target;
-    private NavMeshAgent agent;
     private Blackboard bb;
-    private string targetName;
+    private NavMeshAgent agent;
     private float stoppingDistance;
-
-    public BTGoTo(Blackboard _bb, NavMeshAgent _agent, string _target, float _stoppingDistance)
+    private Vector3 target;
+    public BTGoToCover(Blackboard _bb, NavMeshAgent _agent, float _stoppingDistance)
     {
         bb = _bb;
         agent = _agent;
-        targetName = _target;
         stoppingDistance = _stoppingDistance;
-    }
-
-    public void OnEnter()
-    {
-        //Debug.Log("HEY");
-        
     }
 
     public override BTResult Run()
     {
-        target = bb.GetValue<Transform>(targetName);
-        agent.SetDestination(target.position);
+        target = bb.GetValue<Vector3>("Cover");
+        agent.SetDestination(target);
         //Debug.Log(target.position);
         // Debug.Log("HEY");
 
@@ -38,7 +29,7 @@ public class BTGoTo : BTBaseNode
             return BTResult.Failed;
         }
 
-        if (Vector3.Distance(agent.transform.position, target.position) <= stoppingDistance)
+        if (Vector3.Distance(agent.transform.position, target) <= stoppingDistance)
         {
 
             return BTResult.Success;
@@ -47,8 +38,8 @@ public class BTGoTo : BTBaseNode
         {
             return BTResult.Running;
         }
-        return BTResult.Success;
     }
 
+  
     
 }
