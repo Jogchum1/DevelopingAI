@@ -15,11 +15,23 @@ public class BTAttack : BTBaseNode
     }
     public override BTResult Run()
     {
-        if(attackedObject.TryGetComponent(out Player player))
+        Vector3 dirToTarget = (attackedObject.transform.position - attacker.transform.position).normalized;
+
+        RaycastHit hit;
+        if (Physics.Raycast(attacker.transform.position, dirToTarget, out hit, 20) && hit.transform.tag != "Smoke")
         {
-            player.TakeDamage(attacker, damage);
-            return BTResult.Success;
+            
+            if (attackedObject.TryGetComponent(out Player player))
+            {
+                player.TakeDamage(attacker, damage);
+                return BTResult.Success;
+            }
+            return BTResult.Running;
         }
-        return BTResult.Running;
+        else
+        {
+            return BTResult.Failed;
+        }
+           
     }
 }

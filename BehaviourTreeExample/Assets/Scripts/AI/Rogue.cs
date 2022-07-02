@@ -35,10 +35,13 @@ public class Rogue : MonoBehaviour
             new BTCheckPlayer(player),
             new BTDebug("HELP DE SPELER"),
             new BTFindCover(blackBoard, agent, guard.transform, transform),
+            new BTDoAnimation(animator, "Walk Crouch"),
             new BTGoToCover(blackBoard, agent, 2f),
-            new BTDebug("GOOI BOM"),
+            new BTDoAnimation(animator, "Crouch Idle"),
 
-            new BTThrowSmokeBomb(blackBoard, bomb, guard.transform, player.transform)
+            new BTThrowSmokeBomb(blackBoard, bomb, guard.transform, player.transform),
+
+            new BTWait(1f)
           
             
            );

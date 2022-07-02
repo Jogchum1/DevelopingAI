@@ -22,7 +22,7 @@ public class BTThrowSmokeBomb : BTBaseNode
         Vector3 pointB = player.transform.position;
         float a = 0.5f; 
         Vector3 pointC = Vector3.Lerp(pointA, pointB, a);
-        bomb.transform.position = pointC;
+        GameObject.Instantiate(bomb, pointC, Quaternion.identity);
         return BTResult.Success;
 
 

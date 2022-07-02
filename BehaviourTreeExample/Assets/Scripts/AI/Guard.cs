@@ -31,6 +31,7 @@ public class Guard : MonoBehaviour
         blackBoard.SetValue<Transform>("Target", waypointSystem.waypoints[0]);
         blackBoard.SetValue<Transform>("Player", player.transform);
         blackBoard.SetValue<Transform>("Weapon", weapon.transform);
+
         blackBoard.SetValue<bool>("HasWeapon", false);
 
         attackBehaviour = new BTSequence(
@@ -38,7 +39,7 @@ public class Guard : MonoBehaviour
                 new BTLookForPlayer(player.transform, transform, viewAngle),
 
                     new BTCheckBool(blackBoard,
-                        new BTGoTo(blackBoard, agent, "Weapon", 0.5f),
+                        new BTGoTo(blackBoard, agent, "Weapon", 1f),
                         new BTPickUp(blackBoard, weapon, gameObject)),
 
                 new BTGoTo(blackBoard, agent, "Player", 10),
@@ -56,15 +57,13 @@ public class Guard : MonoBehaviour
             new BTDebug("PatrolBehaviour"),
             new BTSelectWaypoint(blackBoard, waypointSystem, "waypointSystem"),
 
-                new BTSelector(new BTLookForPlayer(player.transform, transform, viewAngle),
-                new BTGoTo(blackBoard, agent, "Target", stoppingDistance))
+            new BTSelector(new BTLookForPlayer(player.transform, transform, viewAngle),
+                            new BTGoTo(blackBoard, agent, "Target", stoppingDistance))
                                 
             
             );
 
         chooseBehaviour = new BTSelector(attackBehaviour, patrolBehaviour);
-
-
 
     }
 
@@ -73,16 +72,5 @@ public class Guard : MonoBehaviour
         chooseBehaviour?.Run();
     }
 
-    //private void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.yellow;
-    //    Handles.color = Color.yellow;
-    //    Vector3 endPointLeft = viewTransform.position + (Quaternion.Euler(0, -ViewAngleInDegrees.Value, 0) * viewTransform.transform.forward).normalized * SightRange.Value;
-    //    Vector3 endPointRight = viewTransform.position + (Quaternion.Euler(0, ViewAngleInDegrees.Value, 0) * viewTransform.transform.forward).normalized * SightRange.Value;
-
-    //    Handles.DrawWireArc(viewTransform.position, Vector3.up, Quaternion.Euler(0, -ViewAngleInDegrees.Value, 0) * viewTransform.transform.forward, ViewAngleInDegrees.Value * 2, SightRange.Value);
-    //    Gizmos.DrawLine(viewTransform.position, endPointLeft);
-    //    Gizmos.DrawLine(viewTransform.position, endPointRight);
-
-    //}
+    
 }

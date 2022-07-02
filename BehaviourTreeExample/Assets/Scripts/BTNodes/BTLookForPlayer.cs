@@ -24,7 +24,7 @@ public class BTLookForPlayer : BTBaseNode
             //Debug.Log("ER IS IETS IN JE VIEWANGLE OFZO");
             //raycast
             RaycastHit hit;
-            if (Physics.Raycast(guard.position, dirToTarget, out hit, 20) && hit.transform.tag == "Player")
+            if (Physics.Raycast(guard.position, dirToTarget, out hit, 20) && hit.transform.tag == "Player" && hit.transform.tag != "Smoke")
             {
                 Debug.Log("PLAYER SPOTTED");
                 return BTResult.Success;
