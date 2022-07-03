@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.AI;
-
+using UnityEngine.UI;
 public class Rogue : MonoBehaviour
 {
 
@@ -14,11 +14,12 @@ public class Rogue : MonoBehaviour
     private Animator animator;
     private Blackboard blackBoard;
     public float stoppingDistance = 2f;
-    private string cover;
 
     public GameObject player;
     public GameObject guard;
     public GameObject bomb;
+    public Image imageHolder;
+    public Sprite[] sprites;
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -34,20 +35,23 @@ public class Rogue : MonoBehaviour
             
             new BTCheckPlayer(player),
             new BTDebug("HELP DE SPELER"),
+            new BTChaneSprite(imageHolder, sprites[1]),
             new BTFindCover(blackBoard, agent, guard.transform, transform),
             new BTDoAnimation(animator, "Walk Crouch"),
             new BTGoToCover(blackBoard, agent, 2f),
             new BTDoAnimation(animator, "Crouch Idle"),
+            new BTChaneSprite(imageHolder, sprites[2]),
 
             new BTThrowSmokeBomb(blackBoard, bomb, guard.transform, player.transform),
 
-            new BTWait(1f)
+            new BTWait(2f)
           
             
            );
 
         FollowBehaviour = new BTSequence(
             new BTDoAnimation(animator, "Walk Crouch"),
+            new BTChaneSprite(imageHolder, sprites[0]),
             new BTGoTo(blackBoard, agent, "Player", stoppingDistance),
             new BTDoAnimation(animator, "Crouch Idle")
             

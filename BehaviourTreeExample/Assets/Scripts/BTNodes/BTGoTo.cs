@@ -10,6 +10,7 @@ public class BTGoTo : BTBaseNode
     private Blackboard bb;
     private string targetName;
     private float stoppingDistance;
+    private Sprite sprite;
 
     public BTGoTo(Blackboard _bb, NavMeshAgent _agent, string _target, float _stoppingDistance)
     {

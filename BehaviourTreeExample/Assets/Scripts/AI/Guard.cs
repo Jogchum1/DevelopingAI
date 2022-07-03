@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Guard : MonoBehaviour
 {
@@ -18,7 +19,8 @@ public class Guard : MonoBehaviour
     public GameObject player;
     public GameObject weapon;
     public float viewAngle = 100;
-
+    public Image imageHolder;
+    public Sprite[] sprites;
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -35,15 +37,17 @@ public class Guard : MonoBehaviour
         blackBoard.SetValue<bool>("HasWeapon", false);
 
         attackBehaviour = new BTSequence(
-                new BTDebug("AttackBehaviour"),
+                new BTChaneSprite(imageHolder, sprites[1]),
                 new BTLookForPlayer(player.transform, transform, viewAngle),
 
                     new BTCheckBool(blackBoard,
+                        new BTChaneSprite(imageHolder, sprites[2]),
                         new BTGoTo(blackBoard, agent, "Weapon", 1f),
                         new BTPickUp(blackBoard, weapon, gameObject)),
-
+                new BTChaneSprite(imageHolder, sprites[2]),
                 new BTGoTo(blackBoard, agent, "Player", 10),
                 new BTChasePlayer(blackBoard, agent, "Player", 20f, 2f),
+                new BTChaneSprite(imageHolder, sprites[3]),
                 new BTDoAnimation(animator, "Kick"),
                 new BTAttack(player, gameObject, 1),
                 new BTWait(1f)
@@ -54,11 +58,16 @@ public class Guard : MonoBehaviour
 
         patrolBehaviour = new BTSequence(
 
-            new BTDebug("PatrolBehaviour"),
-            new BTSelectWaypoint(blackBoard, waypointSystem, "waypointSystem"),
+             new BTChaneSprite(imageHolder, sprites[0]),
 
-            new BTSelector(new BTLookForPlayer(player.transform, transform, viewAngle),
-                            new BTGoTo(blackBoard, agent, "Target", stoppingDistance))
+             new BTSelector(
+                new BTSelectWaypoint(blackBoard, waypointSystem, "waypointSystem"),
+
+                new BTInvertResult(new BTLookForPlayer(player.transform, transform, viewAngle))),
+
+
+            new BTInvertResult(new BTLookForPlayer(player.transform, transform, viewAngle)),
+            new BTGoTo(blackBoard, agent, "Target", stoppingDistance)
                                 
             
             );

@@ -21,8 +21,6 @@ public class BTLookForPlayer : BTBaseNode
         Vector3 dirToTarget = (target.position - guard.position).normalized;
         if(Vector3.Angle(guard.forward, dirToTarget) < viewAngle / 2)
         {
-            //Debug.Log("ER IS IETS IN JE VIEWANGLE OFZO");
-            //raycast
             RaycastHit hit;
             if (Physics.Raycast(guard.position, dirToTarget, out hit, 20) && hit.transform.tag == "Player" && hit.transform.tag != "Smoke")
             {
