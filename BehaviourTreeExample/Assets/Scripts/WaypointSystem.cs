@@ -5,7 +5,7 @@ using UnityEngine;
 public class WaypointSystem : MonoBehaviour
 {
     public Transform[] waypoints;
-    public int waypointIndex = -1;
+    public int waypointCount = -1;
 
     // Start is called before the first frame update
     void Start()
@@ -15,12 +15,12 @@ public class WaypointSystem : MonoBehaviour
 
     public Transform NextWaypoint()
     {
-        waypointIndex++;
-        if (waypointIndex >= waypoints.Length)
+        waypointCount++;
+        if (waypointCount >= waypoints.Length)
         {
-            waypointIndex = 0;
+            waypointCount = 0;
         }
-        return waypoints[waypointIndex];
+        return waypoints[waypointCount];
     }
 
     

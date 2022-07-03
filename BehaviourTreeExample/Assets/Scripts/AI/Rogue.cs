@@ -15,6 +15,8 @@ public class Rogue : MonoBehaviour
     private Blackboard blackBoard;
     public float stoppingDistance = 2f;
 
+    public Blackboard publicBlackBoard;
+
     public GameObject player;
     public GameObject guard;
     public GameObject bomb;

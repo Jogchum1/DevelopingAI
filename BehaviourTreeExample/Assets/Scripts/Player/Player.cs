@@ -72,6 +72,8 @@ public class Player : MonoBehaviour, IDamageable
         Health = Health - damage;
         if(Health <= 0)
         {
+            isAttacked = false;
+
             animator.enabled = false;
             var cols = GetComponentsInChildren<Collider>();
             foreach (Collider col in cols)

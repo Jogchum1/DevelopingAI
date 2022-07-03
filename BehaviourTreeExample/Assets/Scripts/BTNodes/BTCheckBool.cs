@@ -9,16 +9,18 @@ public class BTCheckBool : BTBaseNode
     
 
     private Blackboard bb;
+    private string boolToCheck;
     private bool CheckBool;
-    public BTCheckBool(Blackboard _bb, params BTBaseNode[] _children)
+    public BTCheckBool(Blackboard _bb, string _boolToCheck, params BTBaseNode[] _children)
     {
         bb = _bb;
         children = _children;
+        boolToCheck = _boolToCheck;
 
     }
     public override BTResult Run()
     {
-        CheckBool = bb.GetValue<bool>("HasWeapon");
+        CheckBool = bb.GetValue<bool>(boolToCheck);
         if (CheckBool == true)
         {
             return BTResult.Success;

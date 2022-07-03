@@ -19,7 +19,12 @@ public class BTLookForPlayer : BTBaseNode
     {
         
         Vector3 dirToTarget = (target.position - guard.position).normalized;
-        if(Vector3.Angle(guard.forward, dirToTarget) < viewAngle / 2)
+        if(Vector3.Distance(target.position, guard.position) < 5)
+        {
+            return BTResult.Success;
+
+        }
+        if (Vector3.Angle(guard.forward, dirToTarget) < viewAngle / 2)
         {
             RaycastHit hit;
             if (Physics.Raycast(guard.position, dirToTarget, out hit, 20) && hit.transform.tag == "Player" && hit.transform.tag != "Smoke")

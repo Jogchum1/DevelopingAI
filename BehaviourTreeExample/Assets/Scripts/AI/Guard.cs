@@ -9,13 +9,15 @@ public class Guard : MonoBehaviour
 {
     private BTBaseNode patrolBehaviour;
     private BTBaseNode attackBehaviour;
-    private BTBaseNode chooseBehaviour;
+    private BTBaseNode guardBehaviour;
+
     private NavMeshAgent agent;
     private Animator animator;
     private Blackboard blackBoard;
     public WaypointSystem waypointSystem;
     public float stoppingDistance = 2f;
 
+    public Blackboard publicBlackBoard;
     public GameObject player;
     public GameObject weapon;
     public float viewAngle = 100;
@@ -35,21 +37,25 @@ public class Guard : MonoBehaviour
         blackBoard.SetValue<Transform>("Weapon", weapon.transform);
 
         blackBoard.SetValue<bool>("HasWeapon", false);
+        blackBoard.SetValue<bool>("PlayerAlived", true);
 
         attackBehaviour = new BTSequence(
+
+                new BTCheckBool(blackBoard, "PlayerAlived", new BTFailed()),
                 new BTChaneSprite(imageHolder, sprites[1]),
                 new BTLookForPlayer(player.transform, transform, viewAngle),
 
-                    new BTCheckBool(blackBoard,
+                    new BTCheckBool(blackBoard, "HasWeapon",
                         new BTChaneSprite(imageHolder, sprites[2]),
                         new BTGoTo(blackBoard, agent, "Weapon", 1f),
                         new BTPickUp(blackBoard, weapon, gameObject)),
                 new BTChaneSprite(imageHolder, sprites[2]),
                 new BTGoTo(blackBoard, agent, "Player", 10),
-                new BTChasePlayer(blackBoard, agent, "Player", 20f, 2f),
+                new BTChasePlayer(blackBoard, agent, "Player", 10f, 2f),
                 new BTChaneSprite(imageHolder, sprites[3]),
+                
+                new BTAttack(player, gameObject, 1, blackBoard),
                 new BTDoAnimation(animator, "Kick"),
-                new BTAttack(player, gameObject, 1),
                 new BTWait(1f)
 
 
@@ -58,27 +64,30 @@ public class Guard : MonoBehaviour
 
         patrolBehaviour = new BTSequence(
 
+             new BTDoAnimation(animator, "Idle"),
+             new BTWait(2f),
              new BTChaneSprite(imageHolder, sprites[0]),
 
              new BTSelector(
                 new BTSelectWaypoint(blackBoard, waypointSystem, "waypointSystem"),
 
-                new BTInvertResult(new BTLookForPlayer(player.transform, transform, viewAngle))),
+                 new BTCheckBool(blackBoard, "PlayerAlived", new BTInvertResult(new BTLookForPlayer(player.transform, transform, viewAngle)))),
 
 
-            new BTInvertResult(new BTLookForPlayer(player.transform, transform, viewAngle)),
+             new BTCheckBool(blackBoard, "PlayerAlived", new BTInvertResult(new BTLookForPlayer(player.transform, transform, viewAngle))),
+             new BTDoAnimation(animator, "Rifle Walk"),
             new BTGoTo(blackBoard, agent, "Target", stoppingDistance)
                                 
             
             );
 
-        chooseBehaviour = new BTSelector(attackBehaviour, patrolBehaviour);
 
+        guardBehaviour = new BTSelector(attackBehaviour, patrolBehaviour);
     }
 
     private void FixedUpdate()
     {
-        chooseBehaviour?.Run();
+        guardBehaviour?.Run();
     }
 
     
